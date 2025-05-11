@@ -1,0 +1,63 @@
+name: Mirror xiaoyao repos to CNB.cool
+
+on:
+  schedule:
+    - cron: '0 */6 * * *'   # 每6小时执行一次
+  workflow_dispatch:         # 允许手动触发
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 安装 Git
+        run: sudo apt-get update && sudo apt-get install -y git
+
+      # 缓存 xiaoyao-cvs-plugin.git
+      - name: 缓存 xiaoyao-cvs-plugin
+        uses: actions/cache@v4
+        with:
+          path: xiaoyao-cvs-plugin.git
+          key: mirror-xiaoyao-cvs-plugin
+
+      - name: 同步 xiaoyao-cvs-plugin
+        env:
+          MIRROR_USERNAME: ${{ secrets.MIRROR_USERNAME }}
+          MIRROR_PASSWORD: ${{ secrets.MIRROR_PASSWORD }}
+        run: |
+          if [ ! -d "xiaoyao-cvs-plugin.git" ]; then
+            git clone --mirror https://github.com/Ctrlcvs/xiaoyao-cvs-plugin xiaoyao-cvs-plugin.git
+          else
+            cd xiaoyao-cvs-plugin.git
+            git remote update
+            cd ..
+          fi
+
+          cd xiaoyao-cvs-plugin.git
+          git remote set-url --push origin https://${MIRROR_USERNAME}:${MIRROR_PASSWORD}@cnb.cool/tar/xiaoyao-cvs-plugin.git
+          git push --mirror
+          cd ..
+
+      # 缓存 xiaoyao_plus.git
+      - name: 缓存 xiaoyao_plus
+        uses: actions/cache@v4
+        with:
+          path: xiaoyao_plus.git
+          key: mirror-xiaoyao_plus
+
+      - name: 同步 xiaoyao_plus
+        env:
+          MIRROR_USERNAME: ${{ secrets.MIRROR_USERNAME }}
+          MIRROR_PASSWORD: ${{ secrets.MIRROR_PASSWORD }}
+        run: |
+          if [ ! -d "xiaoyao_plus.git" ]; then
+            git clone --mirror https://github.com/ctrlcvs/xiaoyao_plus xiaoyao_plus.git
+          else
+            cd xiaoyao_plus.git
+            git remote update
+            cd ..
+          fi
+
+          cd xiaoyao_plus.git
+          git remote set-url --push origin https://${MIRROR_USERNAME}:${MIRROR_PASSWORD}@cnb.cool/tar/xiaoyao_plus.git
+          git push --mirror
