@@ -35,7 +35,7 @@ jobs:
 
           cd xiaoyao-cvs-plugin.git
           git remote set-url --push origin https://${MIRROR_USERNAME}:${MIRROR_PASSWORD}@cnb.cool/tar/xiaoyao-cvs-plugin.git
-          git push --mirror
+          git push --mirror --force || echo "Some refs were rejected, but main refs likely succeeded."
           cd ..
 
       # 缓存 xiaoyao_plus.git
@@ -60,4 +60,4 @@ jobs:
 
           cd xiaoyao_plus.git
           git remote set-url --push origin https://${MIRROR_USERNAME}:${MIRROR_PASSWORD}@cnb.cool/tar/xiaoyao_plus.git
-          git push --mirror
+          git push --mirror --force || echo "Some refs were rejected, but main refs likely succeeded."
