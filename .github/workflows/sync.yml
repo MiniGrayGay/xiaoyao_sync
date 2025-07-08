@@ -26,16 +26,15 @@ jobs:
           MIRROR_PASSWORD: ${{ secrets.MIRROR_PASSWORD }}
         run: |
           if [ ! -d "xiaoyao-cvs-plugin.git" ]; then
-            git clone --mirror https://github.com/Ctrlcvs/xiaoyao-cvs-plugin xiaoyao-cvs-plugin.git
+            git clone https://github.com/Ctrlcvs/xiaoyao-cvs-plugin xiaoyao-cvs-plugin.git
           else
             cd xiaoyao-cvs-plugin.git
-            git remote update
+            git pull
             cd ..
           fi
 
           cd xiaoyao-cvs-plugin.git
-          git remote set-url --push origin https://${MIRROR_USERNAME}:${MIRROR_PASSWORD}@cnb.cool/tar/xiaoyao-cvs-plugin.git
-          git push --mirror --force || echo "Some refs were rejected, but main refs likely succeeded."
+          git push https://${MIRROR_USERNAME}:${MIRROR_PASSWORD}@cnb.cool/tar/xiaoyao-cvs-plugin.git || echo "xiaoyao-cvs-plugin Sync Fail"
           cd ..
 
       # 缓存 xiaoyao_plus.git
@@ -51,13 +50,12 @@ jobs:
           MIRROR_PASSWORD: ${{ secrets.MIRROR_PASSWORD }}
         run: |
           if [ ! -d "xiaoyao_plus.git" ]; then
-            git clone --mirror https://github.com/ctrlcvs/xiaoyao_plus xiaoyao_plus.git
+            git clone https://github.com/ctrlcvs/xiaoyao_plus xiaoyao_plus.git
           else
             cd xiaoyao_plus.git
-            git remote update
+            git pull
             cd ..
           fi
 
           cd xiaoyao_plus.git
-          git remote set-url --push origin https://${MIRROR_USERNAME}:${MIRROR_PASSWORD}@cnb.cool/tar/xiaoyao_plus.git
-          git push --mirror --force || echo "Some refs were rejected, but main refs likely succeeded."
+          git push https://${MIRROR_USERNAME}:${MIRROR_PASSWORD}@cnb.cool/tar/xiaoyao_plus.git || echo "xiaoyao_plus Sync Fail"
